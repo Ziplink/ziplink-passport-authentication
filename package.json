@@ -1,0 +1,14 @@
+{
+  "name": "ziplink-passport-authentication",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {},
+  "dependencies": {
+    "express": "^4.14.0",
+    "express-session": "^1.14.0",
+    "passport": "^0.3.2",
+    "passport-google-oauth": "^1.0.0",
+    "user-basic-mongo-storage": "git://github.com/Ziplink/user-basic-mongo-storage.git"
+  },
+  "devDependencies": {}
+}
