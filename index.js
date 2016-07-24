@@ -4,6 +4,7 @@ var router = express.Router();
 var passport = require('passport');
 var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 var session = require('express-session');
+const MongoStore = require('connect-mongo')(session);
 
 var User = require('user-basic-mongo-storage');
 
@@ -62,7 +63,8 @@ router.use(session({
   secret: 'supersecretstring',
   resave: false,
   saveUninitialized: true,
-  cookie: { secure: false }
+  cookie: { secure: false },
+  store: new MongoStore({ url: 'mongodb://localhost/ziplink' })
 }));
 
 router.use(passport.initialize());
@@ -82,7 +84,6 @@ module.exports = exports = function(authPath){
   //Make session data available to views
   router.use(function(req, res, next){
     res.locals.user = req.session.passport.user;
-    console.log(res.locals.session);
     next();
   });
     
