@@ -83,7 +83,8 @@ module.exports = exports = function(authPath){
     
   //Make session data available to views
   router.use(function(req, res, next){
-    res.locals.user = req.session.passport.user;
+    if(typeof req.session.passport !== 'undefined')
+      res.locals.user = req.session.passport.user;
     next();
   });
     
