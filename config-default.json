@@ -1,6 +1,0 @@
-{
-  "CONFIGURED": false,
-  "GOOGLE_CLIENT_ID": "REPLACEME",
-  "GOOGLE_CLIENT_SECRET": "REPLACEME",
-  "GOOGLE_CALLBACK_URL": "http://ziplink-aussieshibe.c9users.io:8080/~auth/google/callback"
-}
