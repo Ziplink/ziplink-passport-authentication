@@ -4,11 +4,12 @@ module.exports = exports = function ziplinkPassportAuthentication(CONFIG){
   var router = express.Router();
   
   var passport = require('passport');
-  var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
   var session = require('express-session');
   const MongoStore = require('connect-mongo')(session);
   
   var User = require('user-basic-mongo-storage');
+  
+  var googleAuth = require('./providers/google.js');
   
   passport.serializeUser(function(user, done) {
       done(null, 
@@ -39,43 +40,8 @@ module.exports = exports = function ziplinkPassportAuthentication(CONFIG){
   router.use(passport.initialize());
   router.use(passport.session());
   
-  if(CONFIG['ziplink-passport-authentication'].providers.google.configured){
-    passport.use(new GoogleStrategy({  
-            clientID: CONFIG['ziplink-passport-authentication'].providers.google.web.client_id,
-            clientSecret: CONFIG['ziplink-passport-authentication'].providers.google.web.client_secret,
-            callbackURL: CONFIG['ziplink-passport-authentication'].providers.google.web.redirect_uris[0]
-        },
-        function(accessToken, refreshToken, profile, done) {
-          User.findByAuthentication(
-            {
-              'provider': profile.provider,
-              'ID': profile.id
-            }, function(err, user){
-              if(!user)
-                User.create({
-                  displayName: profile.displayName,
-                  authentication: {
-                    provider: profile.provider,
-                    ID: profile.id
-                  }
-                }, function (err, user) {
-                  return done(err, user);
-                });
-              else return done(err, user);
-            });
-             
-        }
-    ));
-    
-    router.get(CONFIG.routing.authPath + '/google',
-      passport.authenticate('google', { session: true, scope: ['https://www.googleapis.com/auth/plus.login', 'https://www.googleapis.com/auth/userinfo.profile'] }));
-      
-    router.get(CONFIG.routing.authPath + '/google/callback', 
-      passport.authenticate('google', { failureRedirect: '/~loginError' }),
-      function(req, res) {
-        res.redirect('/');
-      });
-  }
+  passport.use(googleAuth.Strategy(CONFIG));
+  router.use(googleAuth.Router(passport, CONFIG));
     
   //Make session data available to views
   router.use(function(req, res, next){
