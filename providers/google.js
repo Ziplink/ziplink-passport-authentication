@@ -11,23 +11,26 @@ function createStrategy(CONFIG) {
     function(accessToken, refreshToken, profile, done) {
       User.findByAuthentication({
         'provider': profile.provider,
-        'ID': profile.id
-      }, function(err, user) {
-        if (!user)
-          User.create({
+        'id': profile.id
+      })
+      .then(function(user){
+        if(user){
+          return done(undefined, user);
+        } else {
+          return User.create({
             displayName: profile.displayName,
             authentication: {
               provider: profile.provider,
-              ID: profile.id
-            }
-          }, function(err, user) {
-            return done(err, user);
-          });
-        else return done(err, user);
+              id: profile.id,
+            },
+          })
+          .then(function(user){
+            return done(undefined, user);
+          })
+          .catch(done);
+        }
       });
-
-    }
-  );
+    });
 }
 
 function createRouter(passport, CONFIG) {

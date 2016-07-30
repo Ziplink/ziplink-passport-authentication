@@ -20,9 +20,11 @@ module.exports = exports = function ziplinkPassportAuthentication(CONFIG){
   });
   
   passport.deserializeUser(function(user, done) {
-      User.findOne({'_id':user._id}, function(err, user) {
-          done(err, user);
-      });
+    User.findOne({'_id':user._id})
+      .then(function(user){
+        done(undefined, user);
+      })
+      .catch(done);
   });
   
   if(CONFIG['ziplink-passport-authentication'].session.secret === ''){
@@ -41,7 +43,7 @@ module.exports = exports = function ziplinkPassportAuthentication(CONFIG){
   router.use(passport.session());
   
   passport.use(googleAuth.Strategy(CONFIG));
-  router.use(googleAuth.Router(passport, CONFIG));
+  router.use('/~auth', googleAuth.Router(passport, CONFIG));
     
   //Make session data available to views
   router.use(function(req, res, next){
