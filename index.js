@@ -44,8 +44,10 @@ router.use(session({
 router.use(passport.initialize());
 router.use(passport.session());
 
-passport.use(googleAuth.Strategy);
-router.use('/~auth', googleAuth.Router(passport));
+if (passportConfig.providers.google.configured) {
+  passport.use(googleAuth.Strategy);
+  router.use('/~auth', googleAuth.Router(passport));
+}
   
 //Make session data available to views
 router.use(function(req, res, next){
