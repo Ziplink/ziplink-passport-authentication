@@ -10,7 +10,8 @@
     "express-session": "^1.14.0",
     "passport": "^0.3.2",
     "passport-google-oauth": "^1.0.0",
-    "user-basic-mongo-storage": "git://github.com/Ziplink/user-basic-mongo-storage.git"
+    "user-basic-mongo-storage": "git://github.com/Ziplink/user-basic-mongo-storage.git",
+    "ziplink-logger": "git://github.com/Ziplink/ziplink-logger.git"
   },
   "devDependencies": {}
 }
