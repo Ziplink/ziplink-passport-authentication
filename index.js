@@ -1,3 +1,5 @@
+var log = require('ziplink-logger');
+
 var express = require('express');
 var router = express.Router();
 
@@ -30,7 +32,7 @@ passport.deserializeUser(function(user, done) {
 });
 
 if(passportConfig.session.secret === ''){
-  console.error('Session secret not set in ziplink-config, defaulting to "DEFAULT"');
+  log.warn('Session secret not set in ziplink-config, defaulting to "DEFAULT"');
 }
 
 router.use(session({
